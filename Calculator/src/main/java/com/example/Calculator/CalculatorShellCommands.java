@@ -50,6 +50,25 @@ public class CalculatorShellCommands {
         }, "Division");
     }
 
+    @ShellMethod(key = "power", value = "Hebt die zweitoberste Zahl im Stack auf die Potenz der obersten Zahl.")
+    public String power() {
+        return binaryOperation((a, b) -> Math.pow(b, a), "Potenz");
+    }
+
+    @ShellMethod(key = "sqrt", value = "Berechnet die Quadratwurzel der obersten Zahl im Stack.")
+    public String sqrt() {
+        if (dblStack.isEmpty()) {
+            return "Fehler: Der Stack ist leer.";
+        }
+        double value = dblStack.get(0);
+        if (value < 0) {
+            return "Fehler: Quadratwurzel von negativen Zahlen ist nicht definiert.";
+        }
+        double result = Math.sqrt(value);
+        dblStack = immutablePush(dblStack.subList(1, dblStack.size()), result);
+        return "Quadratwurzel Ergebnis: " + result + " | Stack: " + dblStack;
+    }
+
     @ShellMethod(key = "sum-all", value = "Summiert alle Werte im Stack.")
     public String sumAll() {
         double sum = dblStack.stream().reduce(0.0, Double::sum);
@@ -120,5 +139,6 @@ public class CalculatorShellCommands {
     @FunctionalInterface
     private interface BinaryOperator {
         double apply(double a, double b);
-    }}
+    }
+}
 
